@@ -6,34 +6,42 @@ import { ExternalLink, Github } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 
+interface Project {
+  title: string
+  description: string
+  image: string
+  technologies: string[]
+  liveUrl: string
+  githubUrl: string
+}
 export function ProjectsSection() {
-  const projects = [
-    {
-      title: "E-commerce Platform",
-      description:
-        "A full-featured e-commerce platform with product management, cart functionality, and payment processing.",
-      image: "/placeholder.svg?height=400&width=600",
-      technologies: ["Next.js", "TypeScript", "Stripe", "Tailwind CSS"],
-      liveUrl: "https://example.com",
-      githubUrl: "https://github.com",
-    },
-    {
-      title: "Task Management App",
-      description:
-        "A collaborative task management application with real-time updates and team collaboration features.",
-      image: "/placeholder.svg?height=400&width=600",
-      technologies: ["React", "Firebase", "Redux", "Material UI"],
-      liveUrl: "https://example.com",
-      githubUrl: "https://github.com",
-    },
-    {
-      title: "Portfolio Website",
-      description: "A modern portfolio website with 3D elements and animations to showcase projects and skills.",
-      image: "/placeholder.svg?height=400&width=600",
-      technologies: ["Next.js", "Three.js", "Framer Motion", "Tailwind CSS"],
-      liveUrl: "https://example.com",
-      githubUrl: "https://github.com",
-    },
+  const projects: Project[] = [
+    // {
+    //   title: "E-commerce Platform",
+    //   description:
+    //     "A full-featured e-commerce platform with product management, cart functionality, and payment processing.",
+    //   image: "/placeholder.svg?height=400&width=600",
+    //   technologies: ["Next.js", "TypeScript", "Stripe", "Tailwind CSS"],
+    //   liveUrl: "https://example.com",
+    //   githubUrl: "https://github.com",
+    // },
+    // {
+    //   title: "Task Management App",
+    //   description:
+    //     "A collaborative task management application with real-time updates and team collaboration features.",
+    //   image: "/placeholder.svg?height=400&width=600",
+    //   technologies: ["React", "Firebase", "Redux", "Material UI"],
+    //   liveUrl: "https://example.com",
+    //   githubUrl: "https://github.com",
+    // },
+    // {
+    //   title: "Portfolio Website",
+    //   description: "A modern portfolio website with 3D elements and animations to showcase projects and skills.",
+    //   image: "/placeholder.svg?height=400&width=600",
+    //   technologies: ["Next.js", "Three.js", "Framer Motion", "Tailwind CSS"],
+    //   liveUrl: "https://example.com",
+    //   githubUrl: "https://github.com",
+    // },
   ]
 
   const container = {
@@ -77,71 +85,98 @@ export function ProjectsSection() {
         </motion.h2>
 
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center items-center"
           variants={container}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
         >
-          {projects.map((project, index) => (
-            <motion.div
-              key={index}
-              variants={item}
-              whileHover={{ y: -10, transition: { duration: 0.3 } }}
-            >
-              <Card className="bg-gray-900 border-gray-800 overflow-hidden h-full flex flex-col hover:shadow-lg hover:shadow-emerald-900/20 transition-all duration-300">
-                <motion.div 
-                  className="relative h-48 w-full"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Image src={project.image || "/placeholder.svg"} alt={project.title} fill className="object-cover" />
-                </motion.div>
-                <CardContent className="p-6 flex-1 flex flex-col">
-                  <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                  <p className="text-gray-400 mb-4 flex-1">{project.description}</p>
-
+          {projects.length > 0 ? (
+            projects.map((project, index) => (
+              <motion.div
+                key={index}
+                variants={item}
+                whileHover={{ y: -10, transition: { duration: 0.3 } }}
+              >
+                <Card className="bg-gray-900 border-gray-800 overflow-hidden h-full flex flex-col hover:shadow-lg hover:shadow-emerald-900/20 transition-all duration-300">
                   <motion.div 
-                    className="flex flex-wrap gap-2 mb-4"
-                    variants={container}
-                    initial="hidden"
-                    whileInView="show"
+                    className="relative h-48 w-full"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    {project.technologies.map((tech, idx) => (
-                      <motion.div key={idx} variants={techBadge} custom={idx}>
-                        <Badge variant="outline" className="border-emerald-800 text-emerald-400 hover:bg-emerald-900/20 transition-colors">
-                          {tech}
-                        </Badge>
-                      </motion.div>
-                    ))}
+                    <Image src={project.image || "/placeholder.svg"} alt={project.title} fill className="object-cover" />
                   </motion.div>
+                  <CardContent className="p-6 flex-1 flex flex-col">
+                    <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                    <p className="text-gray-400 mb-4 flex-1">{project.description}</p>
 
-                  <div className="flex gap-4">
-                    <motion.a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-300 hover:text-emerald-400 transition-colors flex items-center gap-1"
-                      whileHover={{ scale: 1.05 }}
+                    <motion.div 
+                      className="flex flex-wrap gap-2 mb-4"
+                      variants={container}
+                      initial="hidden"
+                      whileInView="show"
                     >
-                      <ExternalLink size={16} />
-                      <span>Live Demo</span>
-                    </motion.a>
-                    <motion.a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-300 hover:text-emerald-400 transition-colors flex items-center gap-1"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      <Github size={16} />
-                      <span>Source Code</span>
-                    </motion.a>
-                  </div>
-                </CardContent>
-              </Card>
+                      {project.technologies.map((tech, idx) => (
+                        <motion.div key={idx} variants={techBadge} custom={idx}>
+                          <Badge variant="outline" className="border-emerald-800 text-emerald-400 hover:bg-emerald-900/20 transition-colors">
+                            {tech}
+                          </Badge>
+                        </motion.div>
+                      ))}
+                    </motion.div>
+
+                    <div className="flex gap-4">
+                      <motion.a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-300 hover:text-emerald-400 transition-colors flex items-center gap-1"
+                        whileHover={{ scale: 1.05 }}
+                      >
+                        <ExternalLink size={16} />
+                        <span>Live Demo</span>
+                      </motion.a>
+                      <motion.a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-300 hover:text-emerald-400 transition-colors flex items-center gap-1"
+                        whileHover={{ scale: 1.05 }}
+                      >
+                        <Github size={16} />
+                        <span>Source Code</span>
+                      </motion.a>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))
+          ) : (
+            <motion.div 
+              className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center py-20"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ 
+                duration: 0.8,
+                ease: "easeOut"
+              }}
+            >
+              <motion.p 
+                className="text-gray-400 text-center text-2xl font-bold"
+                animate={{ 
+                  y: [0, -10, 0],
+                }}
+                transition={{
+                  duration: 3,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              >
+                Exciting projects coming soon...
+              </motion.p>
             </motion.div>
-          ))}
+          )}
         </motion.div>
       </motion.div>
     </section>
