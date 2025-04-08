@@ -6,7 +6,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Send, CheckCircle } from "lucide-react"
+import { Send, CheckCircle, AlertCircle } from "lucide-react"
 
 export function ContactForm() {
   const [formData, setFormData] = useState({
@@ -16,6 +16,7 @@ export function ContactForm() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -25,9 +26,21 @@ export function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setError(null)
 
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Something went wrong. Please try again.')
+      }
+
       setIsSubmitting(false)
       setIsSubmitted(true)
       setFormData({ name: "", email: "", message: "" })
@@ -36,15 +49,15 @@ export function ContactForm() {
       setTimeout(() => {
         setIsSubmitted(false)
       }, 5000)
-    }, 1500)
-
-    // In a real implementation, you would send the email here
-    // Example:
-    // await fetch('/api/send-email', {
-    //   method: 'POST',
-    //   body: JSON.stringify(formData),
-    //   headers: { 'Content-Type': 'application/json' }
-    // })
+    } catch (err) {
+      setIsSubmitting(false)
+      setError(err instanceof Error ? err.message : 'Failed to send message. Please try again.')
+      
+      // Clear error after 5 seconds
+      setTimeout(() => {
+        setError(null)
+      }, 5000)
+    }
   }
 
   return (
@@ -53,6 +66,11 @@ export function ContactForm() {
         <div className="bg-emerald-900/30 text-emerald-400 p-4 rounded-lg flex items-center gap-2">
           <CheckCircle size={20} />
           <span>Message sent successfully! I'll get back to you soon.</span>
+        </div>
+      ) : error ? (
+        <div className="bg-red-900/30 text-red-400 p-4 rounded-lg flex items-center gap-2">
+          <AlertCircle size={20} />
+          <span>{error}</span>
         </div>
       ) : (
         <>

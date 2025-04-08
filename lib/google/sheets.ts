@@ -77,6 +77,27 @@ export class GoogleSheetsClient {
   }
 
   /**
+   * Get an access token using the service account credentials
+   * with a scope that allows writing to spreadsheets
+   */
+  private async getWriteAccessToken(): Promise<string | null> {
+    if (!this.credentials) {
+      console.error('No credentials available to get access token')
+      return null
+    }
+
+    try {
+      // Use write scope for appending rows
+      const scope = 'https://www.googleapis.com/auth/spreadsheets'
+      const token = await getGoogleAccessToken(this.credentials, scope)
+      return token
+    } catch (error) {
+      console.error('Error getting write access token:', error)
+      return null
+    }
+  }
+
+  /**
    * Fetch data from a specific sheet in the spreadsheet
    * @param sheetName The name of the sheet to fetch
    * @param forceRefresh Force a refresh ignoring cache if true
@@ -208,6 +229,91 @@ export class GoogleSheetsClient {
     }
   }
   
+  /**
+   * Append a row to a specific sheet in the spreadsheet
+   * @param sheetName The name of the sheet to append to
+   * @param values The row values to append
+   * @returns Success status
+   */
+  async appendRow(sheetName: string, values: string[]): Promise<boolean> {
+    console.log(`Appending row to sheet ${sheetName}...`)
+    
+    try {
+      if (!this.credentials) {
+        console.error('No credentials available to append row')
+        return false
+      }
+      
+      // Get an access token with write permission
+      const accessToken = await this.getWriteAccessToken()
+      if (!accessToken) {
+        console.error('Could not get write access token')
+        return false
+      }
+      
+      // Use the Google Sheets API to append values
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${this.spreadsheetId}/values/${sheetName}:append?valueInputOption=USER_ENTERED`
+      
+      console.log(`Making authenticated API request to append data...`)
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          values: [values]
+        })
+      })
+      
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => 'Unknown error')
+        console.error(`Google Sheets API error: ${response.status} ${response.statusText} - ${errorText}`)
+        throw new Error(`Failed to append row: ${response.statusText}`)
+      }
+      
+      const data = await response.json()
+      console.log(`Successfully appended row to sheet ${sheetName}`)
+      
+      // Clear cache for this sheet as data has changed
+      this.clearCache(sheetName)
+      
+      return true
+    } catch (error) {
+      console.error(`Error appending row to sheet ${sheetName}:`, error)
+      return false
+    }
+  }
+  
+  /**
+   * Add a contact form message to the 4th sheet
+   * @param name Sender's name
+   * @param email Sender's email
+   * @param message Message content
+   * @returns Success status
+   */
+  async addContactMessage(name: string, email: string, message: string): Promise<boolean> {
+    // The 4th sheet - assuming it's named "Contact" or using index "Sheet4"
+    const sheetName = "MESSAGES"
+    
+    // Format date in Brazil timezone (UTC-3)
+    const now = new Date()
+    
+    // Format directly using toLocaleString with Brasilia timezone
+    const formattedDate = now.toLocaleString('pt-BR', { 
+      timeZone: 'America/Sao_Paulo',
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric',
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: false
+    }).replace(', ', '-')
+    
+    return this.appendRow(sheetName, [name, email, message, formattedDate])
+  }
+
   /**
    * Clear the cache for a specific sheet or all sheets
    */

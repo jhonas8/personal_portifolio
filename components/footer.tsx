@@ -47,7 +47,7 @@ export function Footer() {
                   {process.env.EMAIL_ADDRESS || "joao.victor.ribeiro.melo@joaomeloltda.com"}
                 </a>
               </p>
-              <p className="text-gray-400">Based in São Paulo, Brazil</p>
+              <p className="text-gray-400">Based in Salvador-BA, Brazil</p>
             </div>
 
             <h3 className="text-xl font-bold mb-4">Follow Me</h3>
