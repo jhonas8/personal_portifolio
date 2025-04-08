@@ -86,23 +86,22 @@ export function ExperienceSection({ initialData }: { initialData?: Experience[] 
       >
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Work Experience</h2>
 
-        <div className="h-[65vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-emerald-600 scrollbar-track-gray-800">
-          {isLoading ? (
-            <SkeletonLoader />
-          ) : error ? (
-            <ErrorMessage message={error} />
-          ) : experiences.length === 0 ? (
-            <ErrorMessage message="No work experience data found. Please check your data source or try again later." />
-          ) : (
-            <div className="space-y-4">
-              {experiences.map((exp, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
+        {isLoading ? (
+          <SkeletonLoader />
+        ) : error ? (
+          <ErrorMessage message={error} />
+        ) : experiences.length === 0 ? (
+          <ErrorMessage message="No work experience data found. Please check your data source or try again later." />
+        ) : (
+          <div className="space-y-4">
+            {experiences.map((exp, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
                   <Card className="bg-gray-900 border-gray-800">
                     <CardHeader className="py-4 px-5">
                       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-1">
@@ -126,11 +125,10 @@ export function ExperienceSection({ initialData }: { initialData?: Experience[] 
                       </div>
                     </CardContent>
                   </Card>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </motion.div>
     </section>
   )

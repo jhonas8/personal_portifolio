@@ -23,41 +23,41 @@ export function HomeContent({
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   
-  // Set the number of pages based on content
+  // Increase the number of pages to account for varying content heights
   // This controls the total scrollable height
-  const totalPages = 5
+  const totalPages = 5.5
 
   return (
     <main className="relative h-screen w-full space-gradient text-white overflow-hidden">
       <Header />
       <div ref={containerRef} className="w-full h-screen">
         <Canvas className="w-full h-full">
-          <ScrollControls pages={totalPages} damping={0.25} distance={1}>
+          <ScrollControls pages={totalPages} damping={0.25}>
             <Scene />
             <Scroll html>
               <div className="w-screen">
-                {/* First section - About */}
+                {/* About section - First viewport */}
                 <section id="about" className="h-screen flex items-center justify-center">
                   <AboutSection initialData={initialMainData} />
                 </section>
                 
-                {/* Second section - Experience */}
-                <section id="experience" className="h-screen flex items-center justify-center">
+                {/* Experience section - Allow natural height growth */}
+                <section id="experience" className="min-h-screen py-24 flex flex-col justify-start">
                   <ExperienceSection initialData={initialExperiencesData} />
                 </section>
                 
-                {/* Third section - Projects */}
-                <section id="projects" className="h-screen flex items-center justify-center">
+                {/* Projects section - After experience */}
+                <section id="projects" className="min-h-screen flex items-center justify-center mt-12">
                   <ProjectsSection />
                 </section>
                 
-                {/* Fourth section - Blog */}
-                <section id="blog-section" className="h-screen flex items-center justify-center">
+                {/* Blog section */}
+                <section id="blog-section" className="min-h-screen flex items-center justify-center">
                   <BlogSection />
                 </section>
                 
-                {/* Fifth section - Contact/Footer - positioned at the very bottom */}
-                <section id="contact" className="h-screen flex items-center justify-center">
+                {/* Footer - Always at the bottom */}
+                <section id="contact" className="min-h-screen flex items-center justify-center mt-20">
                   <Footer />
                 </section>
               </div>
