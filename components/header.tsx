@@ -56,9 +56,18 @@ export function Header() {
     e.preventDefault()
     const element = document.getElementById(id)
     if (element) {
-      const offsetTop = element.getBoundingClientRect().top + window.pageYOffset
+      // For the experience section, adjust the scroll offset to account for the larger content
+      let offsetY = 0;
+      if (id === 'experience') {
+        // Scroll to the top of the experience section
+        offsetY = element.getBoundingClientRect().top + window.pageYOffset - 100;
+      } else {
+        // For other sections, center them
+        offsetY = element.getBoundingClientRect().top + window.pageYOffset;
+      }
+      
       window.scrollTo({
-        top: offsetTop,
+        top: offsetY,
         behavior: "smooth",
       })
       setIsMenuOpen(false)
