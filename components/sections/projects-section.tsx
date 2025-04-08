@@ -36,6 +36,27 @@ export function ProjectsSection() {
     },
   ]
 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  }
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 70 } }
+  }
+
+  const techBadge = {
+    hidden: { opacity: 0, scale: 0.8 },
+    show: { opacity: 1, scale: 1 }
+  }
+
   return (
     <section className="container mx-auto px-4 py-20 md:py-0">
       <motion.div
@@ -45,58 +66,83 @@ export function ProjectsSection() {
         viewport={{ once: true }}
         className="max-w-6xl mx-auto"
       >
-        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Featured Projects</h2>
+        <motion.h2 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="text-3xl md:text-4xl font-bold mb-12 text-center"
+        >
+          Featured Projects
+        </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           {projects.map((project, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
+              variants={item}
+              whileHover={{ y: -10, transition: { duration: 0.3 } }}
             >
-              <Card className="bg-gray-900 border-gray-800 overflow-hidden h-full flex flex-col">
-                <div className="relative h-48 w-full">
+              <Card className="bg-gray-900 border-gray-800 overflow-hidden h-full flex flex-col hover:shadow-lg hover:shadow-emerald-900/20 transition-all duration-300">
+                <motion.div 
+                  className="relative h-48 w-full"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
+                >
                   <Image src={project.image || "/placeholder.svg"} alt={project.title} fill className="object-cover" />
-                </div>
+                </motion.div>
                 <CardContent className="p-6 flex-1 flex flex-col">
                   <h3 className="text-xl font-bold mb-2">{project.title}</h3>
                   <p className="text-gray-400 mb-4 flex-1">{project.description}</p>
 
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <motion.div 
+                    className="flex flex-wrap gap-2 mb-4"
+                    variants={container}
+                    initial="hidden"
+                    whileInView="show"
+                  >
                     {project.technologies.map((tech, idx) => (
-                      <Badge key={idx} variant="outline" className="border-emerald-800 text-emerald-400">
-                        {tech}
-                      </Badge>
+                      <motion.div key={idx} variants={techBadge} custom={idx}>
+                        <Badge variant="outline" className="border-emerald-800 text-emerald-400 hover:bg-emerald-900/20 transition-colors">
+                          {tech}
+                        </Badge>
+                      </motion.div>
                     ))}
-                  </div>
+                  </motion.div>
 
                   <div className="flex gap-4">
-                    <a
+                    <motion.a
                       href={project.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-300 hover:text-emerald-400 transition-colors flex items-center gap-1"
+                      whileHover={{ scale: 1.05 }}
                     >
                       <ExternalLink size={16} />
                       <span>Live Demo</span>
-                    </a>
-                    <a
+                    </motion.a>
+                    <motion.a
                       href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-300 hover:text-emerald-400 transition-colors flex items-center gap-1"
+                      whileHover={{ scale: 1.05 }}
                     >
                       <Github size={16} />
                       <span>Source Code</span>
-                    </a>
+                    </motion.a>
                   </div>
                 </CardContent>
               </Card>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </motion.div>
     </section>
   )
