@@ -1,49 +1,26 @@
-"use client"
+import { getMainData, MainData } from "@/lib/data/main"
+import { HomeContent } from "@/components/home-content"
 
-import { useRef } from "react"
-import { Canvas } from "@react-three/fiber"
-import { Scroll, ScrollControls } from "@react-three/drei"
-import { AboutSection } from "@/components/sections/about-section"
-import { ExperienceSection } from "@/components/sections/experience-section"
-import { ProjectsSection } from "@/components/sections/projects-section"
-import { BlogSection } from "@/components/sections/blog-section"
-import { Scene } from "@/components/3d/scene"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
+// This is important for server side data fetching
+export const revalidate = 3600 // Revalidate every hour
 
-export default function Home() {
-  const containerRef = useRef<HTMLDivElement>(null)
+// Server component with async data fetching
+export default async function Home() {
+  console.log('Starting Home component rendering...')
 
-  return (
-    <main className="relative h-screen w-full space-gradient text-white overflow-hidden">
-      <Header />
-      <div ref={containerRef} className="w-full h-screen">
-        <Canvas className="w-full h-full">
-          <ScrollControls pages={4} damping={0.25}>
-            <Scene />
-            <Scroll html>
-              <div className="w-screen">
-                <div id="about" className="h-screen flex items-center justify-center">
-                  <AboutSection />
-                </div>
-                <div id="experience" className="h-screen flex items-center justify-center">
-                  <ExperienceSection />
-                </div>
-                <div id="projects" className="h-screen flex items-center justify-center">
-                  <ProjectsSection />
-                </div>
-                <div id="blog-section" className="h-screen flex items-center justify-center">
-                  <BlogSection />
-                </div>
-                <div id="contact" className="h-screen flex items-center justify-center">
-                  <Footer />
-                </div>
-              </div>
-            </Scroll>
-          </ScrollControls>
-        </Canvas>
-      </div>
-    </main>
-  )
+  let mainData: MainData | undefined
+
+  try {
+    // Pre-fetch the data on the server
+    console.log('Fetching main data for Home page...')
+    mainData = await getMainData()
+    console.log('Successfully fetched main data')
+  } catch (error) {
+    console.error('Error pre-fetching main data:', error)
+    console.log('Continuing with undefined data - will use defaults')
+    mainData = undefined
+  }
+
+  return <HomeContent initialMainData={mainData} />
 }
 
