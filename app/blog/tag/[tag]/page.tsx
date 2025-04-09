@@ -5,15 +5,17 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import { useParams, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import { useSearchParams } from "next/navigation"
 import { BlogPostsPreview } from "@/components/blog/blog-post-preview"
 import { BlogPostsPagination } from "@/components/blog/blog-posts-pagination"
 import { SubscribeForm } from "@/components/blog/subscribe-form"
-import { GetPostsResult, getBlogPosts } from "@/lib/data/blog"
+import { GetPostsResult, getPostsByTag } from "@/lib/data/blog"
 
-export default function BlogPage() {
+export default function TagPage() {
+  const params = useParams()
   const searchParams = useSearchParams()
+  const tagName = params.tag as string
   const pageParam = searchParams.get('page')
   const currentPage = pageParam ? parseInt(pageParam) : 1
   
@@ -24,17 +26,19 @@ export default function BlogPage() {
     async function fetchPosts() {
       setLoading(true)
       try {
-        const data = await getBlogPosts(currentPage)
+        const data = await getPostsByTag(tagName, currentPage)
         setBlogData(data)
       } catch (error) {
-        console.error("Error fetching blog posts:", error)
+        console.error("Error fetching blog posts by tag:", error)
       } finally {
         setLoading(false)
       }
     }
     
-    fetchPosts()
-  }, [currentPage])
+    if (tagName) {
+      fetchPosts()
+    }
+  }, [tagName, currentPage])
   
   return (
     <div className="min-h-screen flex flex-col space-gradient text-white">
@@ -48,11 +52,14 @@ export default function BlogPage() {
             transition={{ duration: 0.5 }}
             className="max-w-5xl mx-auto"
           >
-            <Link href="/" className="inline-flex items-center text-emerald-400 hover:text-emerald-300 mb-8">
-              <ArrowLeft size={16} className="mr-2" /> Back to Home
+            <Link href="/blog" className="inline-flex items-center text-emerald-400 hover:text-emerald-300 mb-8">
+              <ArrowLeft size={16} className="mr-2" /> Back to All Posts
             </Link>
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Blog</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-2">#{tagName}</h1>
+            <p className="text-gray-400 text-lg mb-8">
+              Browsing posts tagged with #{tagName}
+            </p>
             
             {loading ? (
               <div className="flex justify-center items-center h-64">
@@ -64,15 +71,18 @@ export default function BlogPage() {
                 
                 {blogData.pagination.totalPages > 1 && (
                   <div className="my-12">
-                    <BlogPostsPagination pagination={blogData.pagination} />
+                    <BlogPostsPagination 
+                      pagination={blogData.pagination} 
+                      basePath={`/blog/tag/${tagName}?page=`}
+                    />
                   </div>
                 )}
               </>
             ) : (
               <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-lg p-8 text-center">
-                <h2 className="text-2xl font-bold mb-4">No posts found!</h2>
+                <h2 className="text-2xl font-bold mb-4">No posts found with this tag</h2>
                 <p className="text-gray-400 mb-4">
-                  Check back soon for updates or subscribe to get notified when new articles are published.
+                  Try browsing a different tag or check out all posts on the blog.
                 </p>
               </div>
             )}
@@ -88,5 +98,4 @@ export default function BlogPage() {
       <Footer />
     </div>
   )
-}
-
+} 
