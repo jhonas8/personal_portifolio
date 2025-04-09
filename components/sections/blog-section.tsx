@@ -16,7 +16,7 @@ export function BlogSection() {
     async function fetchRecentPosts() {
       try {
         const data = await getBlogPosts(1, 3)
-        setRecentPosts(data.posts)
+        setRecentPosts(data.posts as unknown as BlogPost[])
       } catch (error) {
         console.error("Error fetching recent posts:", error)
       } finally {

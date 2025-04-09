@@ -20,7 +20,8 @@ export default function BlogPostPage() {
       setLoading(true)
       try {
         const data = await getBlogPost(slug)
-        setPost(data.post)
+
+        setPost(data.post as unknown as BlogPost)
       } catch (error) {
         console.error("Error fetching blog post:", error)
       } finally {
@@ -35,8 +36,6 @@ export default function BlogPostPage() {
   
   return (
     <div className="min-h-screen flex flex-col space-gradient text-white">
-      <Header />
-
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4">
           {loading ? (

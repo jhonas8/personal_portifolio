@@ -1,16 +1,15 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { BlogPostsPreview } from "@/components/blog/blog-post-preview"
-import { BlogPostsPagination } from "@/components/blog/blog-posts-pagination"
+import { BlogPostsPagination, BlogPaginationProps } from "@/components/blog/blog-posts-pagination"
 import { SubscribeForm } from "@/components/blog/subscribe-form"
-import { GetPostsResult, getBlogPosts } from "@/lib/data/blog"
+import { BlogPost, GetPostsResult, getBlogPosts } from "@/lib/data/blog"
 
 export default function BlogPage() {
   const searchParams = useSearchParams()
@@ -24,7 +23,7 @@ export default function BlogPage() {
     async function fetchPosts() {
       setLoading(true)
       try {
-        const data = await getBlogPosts(currentPage, 3)
+        const data = await getBlogPosts(currentPage)
         setBlogData(data)
       } catch (error) {
         console.error("Error fetching blog posts:", error)
@@ -38,7 +37,6 @@ export default function BlogPage() {
   
   return (
     <div className="min-h-screen flex flex-col space-gradient text-white">
-      <Header />
 
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4">
@@ -60,11 +58,11 @@ export default function BlogPage() {
               </div>
             ) : blogData && blogData.posts.length > 0 ? (
               <>
-                <BlogPostsPreview posts={blogData.posts} />
+                <BlogPostsPreview posts={blogData.posts as unknown as BlogPost[]} />
                 
                 {blogData.pagination.totalPages > 1 && (
                   <div className="my-12">
-                    <BlogPostsPagination pagination={blogData.pagination} />
+                    <BlogPostsPagination pagination={blogData.pagination as unknown as BlogPaginationProps['pagination']} />
                   </div>
                 )}
               </>
