@@ -131,7 +131,7 @@ export class GoogleSheetsClient {
       console.log(`Making authenticated API request to Google Sheets API...`)
       
       const response = await fetch(url, {
-        cache: 'no-store', // Don't use fetch's built-in cache, we're managing our own
+        next: { revalidate: 3600 }, // Cache for 1 hour
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Accept': 'application/json'
@@ -175,7 +175,7 @@ export class GoogleSheetsClient {
       console.log(`Making public API request to: ${url}`)
       
       const response = await fetch(url, { 
-        cache: 'no-store' // Don't use fetch's built-in cache, we're managing our own
+        next: { revalidate: 3600 } // Cache for 1 hour
       })
 
       if (!response.ok) {
