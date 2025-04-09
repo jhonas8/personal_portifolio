@@ -10,7 +10,7 @@ import { ArrowLeft } from "lucide-react"
 export default function BlogPage() {
   return (
     <div className="min-h-screen flex flex-col space-gradient text-white">
-      <Header />
+      {/* <Header /> */}
 
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4">
