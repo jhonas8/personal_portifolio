@@ -20,7 +20,7 @@ export function HomeContent() {
 
   return (
     <main className="relative h-screen w-full space-gradient text-white overflow-hidden">
-      <Header />
+      {/* <Header /> */}
       <div ref={containerRef} className="w-full h-screen">
         <Canvas className="w-full h-full">
           <ScrollControls pages={totalPages} damping={0.25}>

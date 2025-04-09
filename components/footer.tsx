@@ -3,18 +3,37 @@
 import { motion } from "framer-motion"
 import { Github, Linkedin, Mail, ArrowUp } from "lucide-react"
 import { ContactForm } from "@/components/contact-form"
+import { useScroll } from "@react-three/drei"
+import { useEffect, useRef } from "react"
 
 export function Footer() {
+  // Get the drei scroll control if available
+  const scrollControls = useScroll()
+  
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    })
+    // Check if we're in a Three.js context with ScrollControls
+    if (scrollControls) {
+      // Directly set to top without animation first (more reliable)
+      scrollControls.el.scrollTop = 0
+      scrollControls.offset = 0
+      
+      // Force a refresh of the scroll position in the next frame
+      requestAnimationFrame(() => {
+        scrollControls.el.scrollTop = 0
+        scrollControls.offset = 0
+      })
+    } else {
+      // Fallback to regular window scroll for non-Three.js pages
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      })
+    }
   }
 
   return (
     <footer className="bg-gray-900/50 backdrop-blur-sm border-t border-gray-800 pt-16 pb-24 md:pb-8 w-full">
-      <div className="container mx-auto px-4">
+      <div id="footer-content" className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
           {/* Message Me Section */}
           <motion.div
