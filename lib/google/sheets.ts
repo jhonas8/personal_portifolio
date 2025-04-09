@@ -315,6 +315,32 @@ export class GoogleSheetsClient {
   }
 
   /**
+   * Add a blog subscriber to the 5th sheet
+   * @param email Subscriber's email
+   * @returns Success status
+   */
+  async addSubscriber(email: string): Promise<boolean> {
+    // The 5th sheet for subscribers
+    const sheetName = "SUBSCRIBERS"
+    
+    // Format date in Brazil timezone (UTC-3)
+    const now = new Date()
+    
+    // Format directly using toLocaleString with Brasilia timezone
+    const formattedDate = now.toLocaleString('pt-BR', { 
+      timeZone: 'America/Sao_Paulo',
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric',
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: false
+    }).replace(', ', '-')
+    
+    return this.appendRow(sheetName, [email, formattedDate])
+  }
+
+  /**
    * Clear the cache for a specific sheet or all sheets
    */
   clearCache(sheetName?: string): void {

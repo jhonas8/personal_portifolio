@@ -20,16 +20,27 @@ export function SubscribeForm() {
     
     setStatus("loading")
     
-    // Simulate API call - In production, this would call your API
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Something went wrong. Please try again.')
+      }
       
       setStatus("success")
       setMessage("Thanks for subscribing! You'll receive updates about new blog posts.")
       setEmail("")
     } catch (error) {
       setStatus("error")
-      setMessage("There was an error subscribing. Please try again.")
+      setMessage(error instanceof Error ? error.message : "There was an error subscribing. Please try again.")
     }
   }
 

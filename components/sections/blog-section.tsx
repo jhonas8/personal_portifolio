@@ -7,10 +7,12 @@ import { useEffect, useState } from "react"
 import { BlogPost, getBlogPosts } from "@/lib/data/blog"
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
+import { SubscribeForm } from "@/components/blog/subscribe-form"
 
 export function BlogSection() {
   const [recentPosts, setRecentPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
+  const [showSubscribe, setShowSubscribe] = useState(false)
 
   useEffect(() => {
     async function fetchRecentPosts() {
@@ -86,21 +88,30 @@ export function BlogSection() {
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
           <Link href="/blog">
             <Button className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto">
               Browse All Posts <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
-          <Link href="/blog#subscribe">
-            <Button
-              variant="outline"
-              className="border-emerald-600 text-emerald-400 hover:bg-emerald-950 w-full sm:w-auto"
-            >
-              Subscribe for Updates
-            </Button>
-          </Link>
+          <Button
+            variant="outline"
+            className="border-emerald-600 text-emerald-400 hover:bg-emerald-950 w-full sm:w-auto"
+            onClick={() => setShowSubscribe(true)}
+          >
+            Subscribe for Updates
+          </Button>
         </div>
+
+        {showSubscribe && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <SubscribeForm />
+          </motion.div>
+        )}
       </motion.div>
     </section>
   )
