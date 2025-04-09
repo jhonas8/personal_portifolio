@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { googleSheetsClient } from '@/lib/google/sheets'
+import { googleSheetsClient } from '@/lib/google/sheets-fixed'
 
 export async function POST(request: Request) {
   try {

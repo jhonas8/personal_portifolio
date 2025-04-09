@@ -43,7 +43,7 @@ export function HomeContent({
                 
                 {/* Experience section - Allow natural height growth */}
                 <section id="experience" className="min-h-screen py-24 flex flex-col justify-start">
-                  <ExperienceSection />
+                  <ExperienceSection initialData={initialExperiencesData} />
                 </section>
                 
                 {/* Projects section - After experience */}
