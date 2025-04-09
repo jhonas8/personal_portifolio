@@ -10,21 +10,12 @@ import { BlogSection } from "@/components/sections/blog-section"
 import { Scene } from "@/components/3d/scene"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { MainData } from "@/lib/data/main"
-import { Experience } from "@/lib/data/experiences"
 
-// Client component that uses the pre-fetched data
-export function HomeContent({ 
-  initialMainData,
-  initialExperiencesData
-}: { 
-  initialMainData?: MainData;
-  initialExperiencesData?: Experience[];
-}) {
+// Client component with static data
+export function HomeContent() {
   const containerRef = useRef<HTMLDivElement>(null)
   
-  // Increase the number of pages to account for varying content heights
-  // This controls the total scrollable height
+  // Total scrollable height
   const totalPages = 5.5  // Further reduced for better desktop experience
 
   return (
@@ -38,12 +29,12 @@ export function HomeContent({
               <div className="w-screen">
                 {/* About section - First viewport with top padding */}
                 <section id="about" className="h-screen flex items-center justify-center pt-16 md:pt-0">
-                  <AboutSection initialData={initialMainData} />
+                  <AboutSection />
                 </section>
                 
                 {/* Experience section - Allow natural height growth */}
                 <section id="experience" className="min-h-screen py-24 flex flex-col justify-start">
-                  <ExperienceSection initialData={initialExperiencesData} />
+                  <ExperienceSection />
                 </section>
                 
                 {/* Projects section - After experience */}

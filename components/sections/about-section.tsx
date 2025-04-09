@@ -3,71 +3,45 @@
 import { motion } from "framer-motion"
 import { ArrowRight, Github, Linkedin, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react"
-import { MainData } from "@/lib/data/main"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 
-// This is the client-side component that will receive server-fetched data
-export function AboutSection({ initialData }: { initialData?: MainData }) {
-  const [data, setData] = useState<MainData | null>(initialData || null)
-  const [isLoading, setIsLoading] = useState(!initialData)
-
-  // If we don't have initialData (SSR), fetch on the client side
-  useEffect(() => {
-    if (!initialData) {
-      const fetchData = async () => {
-        try {
-          const response = await fetch('/api/data/main')
-          if (!response.ok) {
-            throw new Error('Failed to fetch main data')
-          }
-          const mainData = await response.json()
-          setData(mainData)
-        } catch (error) {
-          console.error('Error fetching main data:', error)
-        } finally {
-          setIsLoading(false)
-        }
-      }
-
-      fetchData()
-    }
-  }, [initialData])
-
-  // Use default content if data is still loading
-  if (!data && isLoading) {
-    return (
-      <section className="container mx-auto px-4 py-20 md:py-0">
-        <div className="max-w-3xl mx-auto animate-pulse">
-          <div className="h-4 w-24 bg-gray-700 rounded mb-2"></div>
-          <div className="h-10 w-48 bg-gray-700 rounded mb-6"></div>
-          <div className="h-6 w-64 bg-gray-700 rounded mb-8"></div>
-          <div className="h-32 bg-gray-700 rounded mb-8"></div>
-          <div className="flex gap-4 mb-10">
-            <div className="h-10 w-32 bg-gray-700 rounded"></div>
-            <div className="h-10 w-32 bg-gray-700 rounded"></div>
-          </div>
-          <div className="flex gap-6">
-            <div className="h-6 w-6 bg-gray-700 rounded-full"></div>
-            <div className="h-6 w-6 bg-gray-700 rounded-full"></div>
-            <div className="h-6 w-6 bg-gray-700 rounded-full"></div>
-          </div>
-        </div>
-      </section>
-    )
+// This is the client-side component with static data
+export function AboutSection() {
+  // Use environment variables for links when available
+  const githubProfile = process.env.GITHUB_PROFILE || "https://github.com/jhonas8"
+  const linkedinProfile = process.env.LINKEDIN_PROFILE || "https://www.linkedin.com/in/joao-melo-ribeiro/"
+  const emailAddress = process.env.EMAIL_ADDRESS || "joao.victor.ribeiro.melo@joaomeloltda.com"
+  
+  // Static content from the provided data
+  const data = {
+    name: "João Melo",
+    title: "Software Developer",
+    personalDescription: "I'm a fullstack developer with 5 years of experience, primarily focused on backend development. I specialize in Node.js and FastAPI development, with hands-on experience working with Golang, Java, Python, and Ruby on Rails. While my strongest expertise lies in backend technologies, I also work with React, Next.js, and TypeScript to deliver complete, end-to-end solutions that are both performant and accessible.",
+    contactMe: "#contact"
   }
 
-  // Fallback values in case data is null
-  const {
-    name = "João Melo",
-    title = "Software Developer",
-    personalDescription = "I'm a fullstack developer with 5 years of experience, primarily focused on backend development. I specialize in Node.js and FastAPI development, with hands-on experience working with Golang, Java, Python, and Ruby on Rails.",
-    cvLink = "#",
-    contactMe = "#contact",
-    githubProfile = "https://github.com/jhonas8",
-    linkedinProfile = "https://www.linkedin.com/in/joao-melo-ribeiro/",
-    emailAddress = "joao.victor.ribeiro.melo@joaomeloltda.com"
-  } = data || {}
+  // Dynamically fetch CV link
+  const [cvLink, setCvLink] = useState("https://drive.google.com/file/d/16iw-iqSFqyR6zV8bZvFQqyZ7h9wzuNpZ/view?usp=sharing")
+
+  useEffect(() => {
+    const fetchCvLink = async () => {
+      try {
+        const response = await fetch('/api/data/main')
+        if (response.ok) {
+          const mainData = await response.json()
+          if (mainData && mainData.cvLink) {
+            setCvLink(mainData.cvLink)
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching CV link:', error)
+        // Keep using the default CV link if fetching fails
+      }
+    }
+
+    fetchCvLink()
+  }, [])
 
   return (
     <section className="container mx-auto px-4 py-20 md:py-0 mt-8 md:mt-0">
@@ -95,7 +69,7 @@ export function AboutSection({ initialData }: { initialData?: MainData }) {
           viewport={{ once: false, amount: 0.8 }}
           className="text-5xl md:text-7xl font-bold mb-6"
         >
-          {name}
+          {data.name}
         </motion.h1>
         
         <motion.h3
@@ -105,7 +79,7 @@ export function AboutSection({ initialData }: { initialData?: MainData }) {
           viewport={{ once: false, amount: 0.8 }}
           className="text-2xl md:text-3xl font-medium text-gray-300 mb-8"
         >
-          {title}
+          {data.title}
         </motion.h3>
 
         <motion.p
@@ -115,7 +89,7 @@ export function AboutSection({ initialData }: { initialData?: MainData }) {
           viewport={{ once: false, amount: 0.8 }}
           className="text-lg text-gray-400 mb-8"
         >
-          {personalDescription}
+          {data.personalDescription}
         </motion.p>
 
         <motion.div
@@ -131,7 +105,7 @@ export function AboutSection({ initialData }: { initialData?: MainData }) {
             </Button>
           </Link>
 
-          <Link href={contactMe} target="_blank">
+          <Link href={data.contactMe}>
             <Button variant="outline" className="border-emerald-600 text-emerald-400 hover:bg-emerald-950">
               Contact Me
             </Button>
