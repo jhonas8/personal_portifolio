@@ -22,7 +22,7 @@ export function AboutSection() {
   }
 
   // Dynamically fetch CV link
-  const [cvLink, setCvLink] = useState("https://drive.google.com/file/d/16iw-iqSFqyR6zV8bZvFQqyZ7h9wzuNpZ/view?usp=sharing")
+  const [cvLink, setCvLink] = useState("#")
 
   useEffect(() => {
     const fetchCvLink = async () => {
@@ -31,6 +31,7 @@ export function AboutSection() {
         if (response.ok) {
           const mainData = await response.json()
           if (mainData && mainData.cvLink) {
+            console.log('CV link:', mainData.cvLink)
             setCvLink(mainData.cvLink)
           }
         }
