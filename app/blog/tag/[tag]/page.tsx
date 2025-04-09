@@ -6,13 +6,14 @@ import { Footer } from "@/components/footer"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { useParams, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { BlogPostsPreview } from "@/components/blog/blog-post-preview"
-import { BlogPostsPagination } from "@/components/blog/blog-posts-pagination"
+import { BlogPostsPagination, BlogPaginationProps } from "@/components/blog/blog-posts-pagination"
 import { SubscribeForm } from "@/components/blog/subscribe-form"
-import { GetPostsResult, getPostsByTag } from "@/lib/data/blog"
+import { BlogPost, GetPostsResult, getPostsByTag } from "@/lib/data/blog"
 
-export default function TagPage() {
+// Component that uses navigation hooks
+function TagContent() {
   const params = useParams()
   const searchParams = useSearchParams()
   const tagName = params.tag as string
@@ -39,7 +40,48 @@ export default function TagPage() {
       fetchPosts()
     }
   }, [tagName, currentPage])
-  
+
+  return (
+    <>
+      <Link href="/blog" className="inline-flex items-center text-emerald-400 hover:text-emerald-300 mb-8">
+        <ArrowLeft size={16} className="mr-2" /> Back to All Posts
+      </Link>
+
+      <h1 className="text-4xl md:text-5xl font-bold mb-2">#{tagName}</h1>
+      <p className="text-gray-400 text-lg mb-8">
+        Browsing posts tagged with #{tagName}
+      </p>
+      
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="w-8 h-8 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      ) : blogData && blogData.posts.length > 0 ? (
+        <>
+          <BlogPostsPreview posts={blogData.posts as unknown as BlogPost[]} />
+          
+          {blogData.pagination.totalPages > 1 && (
+            <div className="my-12">
+              <BlogPostsPagination 
+                pagination={blogData.pagination as unknown as BlogPaginationProps['pagination']} 
+                basePath={`/blog/tag/${tagName}?page=`}
+              />
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-lg p-8 text-center">
+          <h2 className="text-2xl font-bold mb-4">No posts found with this tag</h2>
+          <p className="text-gray-400 mb-4">
+            Try browsing a different tag or check out all posts on the blog.
+          </p>
+        </div>
+      )}
+    </>
+  )
+}
+
+export default function TagPage() {
   return (
     <div className="min-h-screen flex flex-col space-gradient text-white">
       <Header />
@@ -52,40 +94,13 @@ export default function TagPage() {
             transition={{ duration: 0.5 }}
             className="max-w-5xl mx-auto"
           >
-            <Link href="/blog" className="inline-flex items-center text-emerald-400 hover:text-emerald-300 mb-8">
-              <ArrowLeft size={16} className="mr-2" /> Back to All Posts
-            </Link>
-
-            <h1 className="text-4xl md:text-5xl font-bold mb-2">#{tagName}</h1>
-            <p className="text-gray-400 text-lg mb-8">
-              Browsing posts tagged with #{tagName}
-            </p>
-            
-            {loading ? (
+            <Suspense fallback={
               <div className="flex justify-center items-center h-64">
                 <div className="w-8 h-8 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
               </div>
-            ) : blogData && blogData.posts.length > 0 ? (
-              <>
-                <BlogPostsPreview posts={blogData.posts} />
-                
-                {blogData.pagination.totalPages > 1 && (
-                  <div className="my-12">
-                    <BlogPostsPagination 
-                      pagination={blogData.pagination} 
-                      basePath={`/blog/tag/${tagName}?page=`}
-                    />
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-lg p-8 text-center">
-                <h2 className="text-2xl font-bold mb-4">No posts found with this tag</h2>
-                <p className="text-gray-400 mb-4">
-                  Try browsing a different tag or check out all posts on the blog.
-                </p>
-              </div>
-            )}
+            }>
+              <TagContent />
+            </Suspense>
             
             {/* Subscribe Form */}
             <div className="mt-16">
