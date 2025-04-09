@@ -25,7 +25,7 @@ export function HomeContent({
   
   // Increase the number of pages to account for varying content heights
   // This controls the total scrollable height
-  const totalPages = 5.8  // Further reduced to minimize excessive space
+  const totalPages = 5.5  // Further reduced for better desktop experience
 
   return (
     <main className="relative h-screen w-full space-gradient text-white overflow-hidden">
@@ -57,7 +57,7 @@ export function HomeContent({
                 </section>
                 
                 {/* Footer - Ensure it's visible on mobile with adequate space */}
-                <section id="contact" className="min-h-screen md:min-h-[80vh] flex items-center justify-center mt-24 mb-0">
+                <section id="contact" className="min-h-screen md:min-h-[60vh] flex items-center justify-center mt-24 md:mt-0 mb-0">
                   <Footer />
                 </section>
               </div>
