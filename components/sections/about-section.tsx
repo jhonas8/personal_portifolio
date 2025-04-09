@@ -70,7 +70,7 @@ export function AboutSection({ initialData }: { initialData?: MainData }) {
   } = data || {}
 
   return (
-    <section className="container mx-auto px-4 py-20 md:py-0">
+    <section className="container mx-auto px-4 py-20 md:py-0 mt-8 md:mt-0">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}

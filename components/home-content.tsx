@@ -25,7 +25,7 @@ export function HomeContent({
   
   // Increase the number of pages to account for varying content heights
   // This controls the total scrollable height
-  const totalPages = 5.5
+  const totalPages = 5.8  // Further reduced to minimize excessive space
 
   return (
     <main className="relative h-screen w-full space-gradient text-white overflow-hidden">
@@ -36,8 +36,8 @@ export function HomeContent({
             <Scene />
             <Scroll html>
               <div className="w-screen">
-                {/* About section - First viewport */}
-                <section id="about" className="h-screen flex items-center justify-center">
+                {/* About section - First viewport with top padding */}
+                <section id="about" className="h-screen flex items-center justify-center pt-16 md:pt-0">
                   <AboutSection initialData={initialMainData} />
                 </section>
                 
@@ -56,8 +56,8 @@ export function HomeContent({
                   <BlogSection />
                 </section>
                 
-                {/* Footer - Always at the bottom */}
-                <section id="contact" className="min-h-screen flex items-center justify-center mt-20">
+                {/* Footer - Ensure it's visible on mobile with adequate space */}
+                <section id="contact" className="min-h-screen md:min-h-[80vh] flex items-center justify-center mt-24 mb-0">
                   <Footer />
                 </section>
               </div>

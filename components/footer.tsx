@@ -13,7 +13,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-gray-900/50 backdrop-blur-sm border-t border-gray-800 pt-16 pb-8">
+    <footer className="bg-gray-900/50 backdrop-blur-sm border-t border-gray-800 pt-16 pb-24 md:pb-8 w-full">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
           {/* Message Me Section */}
