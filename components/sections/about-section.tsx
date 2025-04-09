@@ -18,7 +18,7 @@ export function AboutSection() {
     name: "João Melo",
     title: "Software Developer",
     personalDescription: "I'm a fullstack developer with 5 years of experience, primarily focused on backend development. I specialize in Node.js and FastAPI development, with hands-on experience working with Golang, Java, Python, and Ruby on Rails. While my strongest expertise lies in backend technologies, I also work with React, Next.js, and TypeScript to deliver complete, end-to-end solutions that are both performant and accessible.",
-    contactMe: "#contact"
+    contactMe: "https://linktr.ee/joaomeloltda"
   }
 
   // Dynamically fetch CV link
@@ -106,7 +106,7 @@ export function AboutSection() {
             </Button>
           </Link>
 
-          <Link href={data.contactMe}>
+          <Link href={data.contactMe} target="_blank" rel="noopener noreferrer">
             <Button variant="outline" className="border-emerald-600 text-emerald-400 hover:bg-emerald-950">
               Contact Me
             </Button>

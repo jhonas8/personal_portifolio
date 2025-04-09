@@ -54,23 +54,50 @@ export function Header() {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault()
+    
+    // Try to find the element
     const element = document.getElementById(id)
+    
     if (element) {
-      // For the experience section, adjust the scroll offset to account for the larger content
+      // Calculate appropriate scroll offset based on the section
+      const headerHeight = 80; // Approximate header height
       let offsetY = 0;
+      
+      offsetY = element.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+      
+      // Specific adjustments for different sections if needed
       if (id === 'experience') {
-        // Scroll to the top of the experience section
-        offsetY = element.getBoundingClientRect().top + window.pageYOffset - 100;
-      } else {
-        // For other sections, center them
-        offsetY = element.getBoundingClientRect().top + window.pageYOffset;
+        // Add additional offset for experience section
+        offsetY -= 20;
+      } else if (id === 'projects') {
+        // Add specific offset for projects section
+        offsetY -= 10;
       }
       
+      // Perform the smooth scroll
       window.scrollTo({
         top: offsetY,
         behavior: "smooth",
       })
+      
+      // Close mobile menu if open
       setIsMenuOpen(false)
+    } else {
+      // If element not found immediately, try once more after a small delay
+      // This helps with dynamically rendered sections
+      setTimeout(() => {
+        const delayedElement = document.getElementById(id)
+        if (delayedElement) {
+          const headerHeight = 80;
+          const offsetY = delayedElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+          
+          window.scrollTo({
+            top: offsetY,
+            behavior: "smooth",
+          })
+        }
+        setIsMenuOpen(false)
+      }, 100)
     }
   }
 
