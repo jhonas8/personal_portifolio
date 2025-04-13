@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState, useEffect } from "react"
 import { Canvas } from "@react-three/fiber"
 import { Scroll, ScrollControls } from "@react-three/drei"
 import { AboutSection } from "@/components/sections/about-section"
@@ -14,9 +14,32 @@ import { Footer } from "@/components/footer"
 // Client component with static data
 export function HomeContent() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [totalPages, setTotalPages] = useState(5.5)
   
-  // Total scrollable height
-  const totalPages = 5.5  // Further reduced for better desktop experience
+  // Update totalPages based on screen size
+  useEffect(() => {
+    const handleResize = () => {
+      // More pages needed for smaller screens
+      if (window.innerWidth < 640) {
+        setTotalPages(8.5); // Small mobile devices
+      } else if (window.innerWidth < 768) {
+        setTotalPages(7.5); // Medium mobile devices
+      } else if (window.innerWidth < 1024) {
+        setTotalPages(6.5); // Tablets
+      } else {
+        setTotalPages(5.5); // Desktops
+      }
+    };
+
+    // Set initial value
+    handleResize();
+    
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    
+    // Clean up
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <main className="relative h-screen w-full space-gradient text-white overflow-hidden">
