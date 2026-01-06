@@ -8,6 +8,22 @@ export function ExperienceSection() {
   const experiences = [
     {
       title: "Senior Software Engineer",
+      company: "Emagine - PMI Lisbon",
+      startDate: "2023",
+      endDate: "present",
+      description: `Blending proactivity with hands-on problem-solving, I’ve focused on building and maintaining scalable, high-throughput backend systems in agile environments. My work spans Python FastAPI API development, GraphQL services, and Amazon Neptune graph database solutions, all designed to handle demanding workloads while staying reliable in production. I thrive on anticipating challenges early, ensuring smooth performance, and keeping systems resilient under pressure.
+
+Key contributions include:
+• Delivered high-throughput backend services with Python (FastAPI), optimized for low-latency workloads
+• Built GraphQL APIs to streamline communication and improve developer experience
+• Designed and tuned Neptune graph database models for complex relationship queries
+• Ensured system resilience through proactive monitoring, scaling, and fault-tolerant practices
+• Applied agile methodologies to drive iterative, reliable, and fast-paced development cycles
+`,
+      skills: ["Python", "FastAPI", "GraphQL", "Amazon Neptune", "AWS", "Backend Architecture", "Agile"],
+    },
+    {
+      title: "Senior Software Engineer",
       company: "OMP",
       startDate: "2024",
       endDate: "present",
