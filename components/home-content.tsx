@@ -61,10 +61,10 @@ export function HomeContent() {
                 </section>
                 
                 {/* Projects section - After experience */}
-                <section id="projects" className="min-h-screen flex items-center justify-center mt-12">
+                {/* <section id="projects" className="min-h-screen flex items-center justify-center mt-12">
                   <ProjectsSection />
                 </section>
-                
+                 */}
                 {/* Blog section */}
                 <section id="blog-section" className="min-h-screen flex items-center justify-center">
                   <BlogSection />
